@@ -9,8 +9,9 @@ const app = express();
 app.use(express.static("images"));
 app.use(bodyParser.json());
 
-const userPlacesPath = path.join(process.cwd("data", "user-places.json"));
-const placesPath = path.join(process.cwd("data", "places.json"));
+const userPlacesPath = path.join(process.cwd(), "data", "user-places.json");
+const placesPath = path.join(process.cwd(), "data", "places.json");
+
 // CORS
 
 app.use((req, res, next) => {
