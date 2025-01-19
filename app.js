@@ -6,7 +6,7 @@ import path from "node:path";
 
 const app = express();
 
-app.use(express.static("images"));
+app.use(express.static(path.join(process.cwd(), "images")));
 app.use(bodyParser.json());
 
 const userPlacesPath = path.join(process.cwd(), "data", "user-places.json");
