@@ -2,24 +2,27 @@ import fs from "node:fs/promises";
 
 import bodyParser from "body-parser";
 import express from "express";
+import path from "node:path";
 
 const app = express();
 
 app.use(express.static("images"));
 app.use(bodyParser.json());
 
+const userPlacesPath = path.join(process.cwd("data", "user-places.json"));
+const placesPath = path.join(process.cwd("data", "places.json"));
 // CORS
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, PUT");
+  res.setHeader("Access-Control-Allow-Methods", "GET, PUT", "OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   next();
 });
 
 app.get("/places", async (req, res) => {
-  const fileContent = await fs.readFile("./data/places.json");
+  const fileContent = await fs.readFile(placesPath);
 
   const placesData = JSON.parse(fileContent);
 
@@ -27,7 +30,7 @@ app.get("/places", async (req, res) => {
 });
 
 app.get("/user-places", async (req, res) => {
-  const fileContent = await fs.readFile("./data/user-places.json");
+  const fileContent = await fs.readFile(userPlacesPath);
 
   const places = JSON.parse(fileContent);
 
@@ -37,7 +40,7 @@ app.get("/user-places", async (req, res) => {
 app.put("/user-places", async (req, res) => {
   const places = req.body.places;
 
-  await fs.writeFile("./data/user-places.json", JSON.stringify(places));
+  await fs.writeFile(userPlacesPath, JSON.stringify(places));
 
   res.status(200).json({ message: "User places updated!" });
 });
@@ -50,6 +53,4 @@ app.use((req, res, next) => {
   res.status(404).json({ message: "404 - Not Found" });
 });
 
-app.listen(3000, () => {
-  console.log(`Server is started at http://localhost:3000`);
-});
+export default app;
